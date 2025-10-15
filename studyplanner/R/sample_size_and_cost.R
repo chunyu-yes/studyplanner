@@ -52,7 +52,7 @@ study_cost <- function(n, cost_per_subject=10000, fixed_costs = 5000) {
 #' @param fixed_costs Fixed costs.
 #' @return A list with n, power, and cost.
 #' @export
-optimize_under_budget <- function(d_adj, alpha = 0.05, budget, cost_per_subject, fixed_costs = 0) {
+optimize_under_budget <- function(d_adj, alpha = 0.05, budget, cost_per_subject, fixed_costs) {
   stopifnot(budget > fixed_costs)
   max_n <- floor(budget / (fixed_costs + cost_per_subject))
   if (max_n < 2) stop("Budget too small for any enrollment")
