@@ -14,7 +14,7 @@ Clone the repo and install locally:
 
 ```r
 # install.packages("devtools")
-devtools::install_github("jh-adv-data-sci/project-4-r-packages-chunyu-yes", subdir = "studyplanner")
+devtools::install_github("chunyu-yes/studyplanner", subdir = "studyplanner")
 ```
 
 ## Usage
