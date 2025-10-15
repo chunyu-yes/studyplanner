@@ -13,7 +13,7 @@
 #' @export
 study_planner <- function(delta, sigma, rho, alpha = 0.05, n = NULL,
                           target_power = NULL, budget = NULL,
-                          cost_per_subject = NULL, fixed_costs = 0) {
+                          cost_per_subject = NULL, fixed_costs) {
   d <- effect_size_adj(delta, sigma, rho)
   out <- list(d_adj = d)
   if (!is.null(n)) out$power_at_n <- power_two_arm(d, n, alpha)
