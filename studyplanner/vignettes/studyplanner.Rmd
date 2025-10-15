@@ -1,0 +1,49 @@
+---
+title: "Planning Studies with the studyplanner Package"
+author: "Your Name"
+date: "`r format(Sys.Date())`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Planning Studies with the studyplanner Package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(collapse = TRUE, comment = "#>")
+```
+
+Overview
+
+studyplanner implements utilities we used previously: adjusted effect size for baseline-follow-up designs, two-arm power/sample size, sensitivity grids, and budget optimization.
+
+Adjusted effect size
+
+For baseline–follow-up correlation rho, single-timepoint SD sigma, and expected difference in annual change Delta,
+
+```{r}
+library(studyplanner)
+d <- effect_size_adj(delta = 0.05, sigma = 0.2, rho = 0.9)
+d
+```
+Power at a given sample size
+```{r}
+power_two_arm(d_adj = d, n = 100, alpha = 0.05)
+```
+
+Solve for sample size
+```{r}
+sample_size_two_arm(d_adj = d, alpha = 0.05, target_power = 0.8)
+```
+Cost and budget optimization
+```{r}
+study_cost(n = 120, cost_per_subject = 10000, fixed_costs = 5000)
+opt <- optimize_under_budget(d, alpha = 0.05, budget = 1000000, cost_per_subject = 10000, fixed_costs = 5000)
+opt
+```
+Sensitivity grid
+```{r}
+plan_grid(delta_vec = c(0.04, 0.05), sigma_vec = c(0.18, 0.2), rho_vec = c(0.85, 0.9), n_vec = c(80, 120),
+alpha = 0.05, cost_per_subject = 10000, fixed_costs = 5000)
+```

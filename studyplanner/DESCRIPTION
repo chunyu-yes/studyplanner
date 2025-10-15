@@ -1,0 +1,28 @@
+Package: studyplanner
+Type: Package
+Title: Study Planning Tools for Power, Sample Size, and Cost Optimization
+Version: 0.1.0
+Authors@R: c(
+    person(
+      "Chunyu", "Liu",
+      email = "cliu220@jh.edu",
+      role = c("aut", "cre")
+    )
+  )
+Description: Implements study planning utilities used in prior projects, including adjusted effect size computation for repeated measures (d_adj), two-arm power and sample size with baseline-follow-up correlation, grid exploration, and cost optimization under budget constraints. Includes a vignette and unit tests.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports:
+    stats
+Suggests:
+    testthat (>= 3.0.0),
+    covr,
+    knitr,
+    rmarkdown,
+    DT,
+    htmltools
+Config/testthat/edition: 3
+VignetteBuilder: knitr
