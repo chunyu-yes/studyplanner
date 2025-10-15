@@ -1,0 +1,70 @@
+name: test-coverage2
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read   
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+     
+      - name: Install deps (local pkg + covr + testthat + xml2)
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          packages: |
+            local::./studyplanner
+            any::covr
+            any::testthat
+            any::xml2
+          cache: true
+
+      
+      - name: Compute coverage JSON
+        shell: Rscript {0}
+        run: |
+          setwd("studyplanner")
+          cov <- covr::package_coverage(path = ".", quiet = FALSE)
+          pct <- round(covr::percent_coverage(cov), 2)
+          cat("Percent coverage:", pct, "%\n")
+          badge <- list(
+            schemaVersion = 1,
+            label = "coverage",
+            message = paste0(pct, "%"),
+            color = if (pct >= 90) "brightgreen" else if (pct >= 80) "green" else if (pct >= 70) "yellowgreen" else "orange"
+          )
+          json <- jsonlite::toJSON(badge, auto_unbox = TRUE)
+          writeLines(json, "coverage.json")
+
+      
+      - name: Update public Gist
+        uses: actions/github-script@v7
+        env:
+          GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
+        with:
+          github-token: ${{ env.GIST_TOKEN }}
+          script: |
+            const fs = require('fs');
+            const content = fs.readFileSync('studyplanner/coverage.json', 'utf8');
+            const gist_id = '5fe9554552dc548aea2fd0a0915be94e';  
+            await github.request('PATCH /gists/{gist_id}', {
+              gist_id,
+              files: { 'coverage.json': { content } },
+              description: 'Auto-updated by GitHub Actions (coverage badge)'
+            });
+            core.info('Gist updated: https://gist.githubusercontent.com/chunyu-yes/' + gist_id + '/raw/coverage.json');
